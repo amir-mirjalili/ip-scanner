@@ -42,6 +42,7 @@ func NewServer(database *db.Database) *Server {
 func (s *Server) routes() {
 	s.App.GET("/", s.healthCheck)
 	s.App.POST("/scan", s.ScanHandler.StartScan)
+	s.App.GET("/scan/:id", s.ScanHandler.GetScan)
 }
 
 func (s *Server) healthCheck(c echo.Context) error {

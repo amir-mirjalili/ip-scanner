@@ -5,6 +5,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strconv"
 )
 
 type ScanHandler struct {
@@ -29,6 +30,21 @@ func (h *ScanHandler) StartScan(c echo.Context) error {
 	scan, err := h.ScanService.RunAndSaveScan(req.CIDR)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, scan)
+}
+
+func (h *ScanHandler) GetScan(c echo.Context) error {
+	idParam := c.Param("id")
+	scanID, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid scan ID"})
+	}
+
+	scan, err := h.ScanService.GetScanByID(uint(scanID))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, map[string]string{"error": "scan not found"})
 	}
 
 	return c.JSON(http.StatusOK, scan)

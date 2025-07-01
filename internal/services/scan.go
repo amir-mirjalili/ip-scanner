@@ -80,3 +80,7 @@ func (s *ScanService) RunAndSaveScan(cidr string) (*models.Scan, error) {
 
 	return scan, nil
 }
+
+func (s *ScanService) GetScanByID(scanId uint) (*models.Scan, error) {
+	return s.ScanRepo.GetAllScans(scanId)
+}
