@@ -11,6 +11,7 @@ import (
 // the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.</p>
 
 func main() {
+
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("❌ Error loading .env file")

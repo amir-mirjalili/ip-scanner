@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type ScanResult struct {
 	ID         uint      `gorm:"primaryKey"`
