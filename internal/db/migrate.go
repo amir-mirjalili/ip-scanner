@@ -10,7 +10,6 @@ func AutoMigrate(database *Database) error {
 		&models.Asset{},
 		&models.Scan{},
 		&models.ScanResult{},
-		&models.Tag{},
 	)
 	if err != nil {
 		return fmt.Errorf("failed to auto migrate: %w", err)
