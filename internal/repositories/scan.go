@@ -9,7 +9,8 @@ type ScanRepository interface {
 	CreateScan(scan *models.Scan) error
 	UpdateScan(scan *models.Scan) error
 	CreateScanResults(results []models.ScanResult) error
-	GetAllScans(scanId uint) (*models.Scan, error)
+	GetScansResults(scanId uint) (*models.Scan, error)
+	GetAllScansResults() (*[]models.Scan, error)
 }
 
 type ScanGormRepository struct {
@@ -32,11 +33,20 @@ func (r *ScanGormRepository) CreateScanResults(results []models.ScanResult) erro
 	return r.DB.Create(&results).Error
 }
 
-func (r *ScanGormRepository) GetAllScans(scanID uint) (*models.Scan, error) {
+func (r *ScanGormRepository) GetScansResults(scanID uint) (*models.Scan, error) {
 	var scan models.Scan
 	err := r.DB.Preload("Results.Asset").First(&scan, scanID).Error
 	if err != nil {
 		return nil, err
 	}
 	return &scan, nil
+}
+
+func (r *ScanGormRepository) GetAllScansResults() (*[]models.Scan, error) {
+	var scans []models.Scan
+	err := r.DB.Preload("Results.Asset").Find(&scans).Error
+	if err != nil {
+		return nil, err
+	}
+	return &scans, nil
 }

@@ -49,3 +49,9 @@ func (h *ScanHandler) GetScan(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, scan)
 }
+
+func (h *ScanHandler) GetAll(c echo.Context) error {
+	scans, _ := h.ScanService.GetAllScans()
+
+	return c.JSON(http.StatusOK, scans)
+}

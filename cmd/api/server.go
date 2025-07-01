@@ -47,6 +47,7 @@ func (s *Server) routes() {
 
 	scans := s.App.Group("/scan")
 	scans.POST("/", s.ScanHandler.StartScan)
+	scans.GET("/", s.ScanHandler.GetAll)
 	scans.GET("/:id", s.ScanHandler.GetScan)
 
 	assets := s.App.Group("/assets")

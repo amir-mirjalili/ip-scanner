@@ -82,5 +82,9 @@ func (s *ScanService) RunAndSaveScan(cidr string) (*models.Scan, error) {
 }
 
 func (s *ScanService) GetScanByID(scanId uint) (*models.Scan, error) {
-	return s.ScanRepo.GetAllScans(scanId)
+	return s.ScanRepo.GetScansResults(scanId)
+}
+
+func (s *ScanService) GetAllScans() (*[]models.Scan, error) {
+	return s.ScanRepo.GetAllScansResults()
 }
