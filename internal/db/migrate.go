@@ -2,7 +2,7 @@ package db
 
 import (
 	"fmt"
-	"ip-scanner/internal/models"
+	"github.com/amir-mirjalili/ip-scanner/internal/models"
 )
 
 func AutoMigrate(database *Database) error {
