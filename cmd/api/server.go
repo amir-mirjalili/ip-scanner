@@ -12,8 +12,9 @@ import (
 )
 
 type Server struct {
-	App         *echo.Echo
-	ScanHandler *handlers.ScanHandler
+	App          *echo.Echo
+	ScanHandler  *handlers.ScanHandler
+	AssetHandler *handlers.AssetHandler
 }
 
 func NewServer(database *db.Database) *Server {
@@ -23,15 +24,17 @@ func NewServer(database *db.Database) *Server {
 
 	scanRepo := repositories.NewGormScanRepository(database.DB)
 	assetRepo := repositories.NewAssetGormRepository(database.DB)
-	//assetService := services.NewAssetService(assetRepo)
+	assetService := services.NewAssetService(assetRepo)
 	assetAdapter := adapter.NewAssetAdapter(assetRepo)
 	scanService := services.NewScanService(scanRepo, assetAdapter)
 
 	scanHandler := &handlers.ScanHandler{ScanService: scanService, Validator: validate}
+	assetHandler := &handlers.AssetHandler{AssetService: assetService, Validator: validate}
 
 	s := &Server{
-		App:         e,
-		ScanHandler: scanHandler,
+		App:          e,
+		ScanHandler:  scanHandler,
+		AssetHandler: assetHandler,
 	}
 
 	s.routes()
@@ -41,8 +44,17 @@ func NewServer(database *db.Database) *Server {
 
 func (s *Server) routes() {
 	s.App.GET("/", s.healthCheck)
-	s.App.POST("/scan", s.ScanHandler.StartScan)
-	s.App.GET("/scan/:id", s.ScanHandler.GetScan)
+
+	scans := s.App.Group("/scan")
+	scans.POST("/", s.ScanHandler.StartScan)
+	scans.GET("/:id", s.ScanHandler.GetScan)
+
+	assets := s.App.Group("/assets")
+	assets.GET("", s.AssetHandler.ListAssets)
+	assets.GET("/:id", s.AssetHandler.GetAsset)
+	assets.POST("", s.AssetHandler.CreateAsset)
+	assets.PUT("/:id", s.AssetHandler.UpdateAsset)
+	assets.DELETE("/:id", s.AssetHandler.DeleteAsset)
 }
 
 func (s *Server) healthCheck(c echo.Context) error {
