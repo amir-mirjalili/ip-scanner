@@ -5,11 +5,11 @@ import (
 )
 
 type ScanResult struct {
-	ID         uint      `gorm:"primaryKey"`
-	ScanID     uint      `gorm:"not null"`
-	AssetID    uint      `gorm:"not null"`
-	DetectedAt time.Time `gorm:"not null"`
+	ID         uint      `gorm:"primaryKey" json:"id"`
+	ScanID     uint      `gorm:"not null" json:"scanId"`
+	AssetID    uint      `gorm:"not null" json:"assetId"`
+	DetectedAt time.Time `gorm:"not null" json:"detectedAt"`
 
-	Scan  Scan
-	Asset Asset
+	Scan  Scan  `json:"scan,omitempty"`
+	Asset Asset `json:"asset,omitempty"`
 }

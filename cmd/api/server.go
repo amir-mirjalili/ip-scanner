@@ -8,6 +8,7 @@ import (
 	"github.com/amir-mirjalili/ip-scanner/internal/services"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"net/http"
 )
 
@@ -43,11 +44,16 @@ func NewServer(database *db.Database) *Server {
 }
 
 func (s *Server) routes() {
+	s.App.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:3000"},
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+	}))
+
 	s.App.GET("/", s.healthCheck)
 
 	scans := s.App.Group("/scan")
-	scans.POST("/", s.ScanHandler.StartScan)
-	scans.GET("/", s.ScanHandler.GetAll)
+	scans.POST("", s.ScanHandler.StartScan)
+	scans.GET("", s.ScanHandler.GetAll)
 	scans.GET("/:id", s.ScanHandler.GetScan)
 
 	assets := s.App.Group("/assets")
